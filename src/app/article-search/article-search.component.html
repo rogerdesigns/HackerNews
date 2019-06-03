@@ -1,0 +1,69 @@
+<div class="row">
+  <form class="form-inline">
+    <div class="input-group mb-2 mr-sm-2">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <i class="material-icons">
+            search
+          </i>
+        </div>
+      </div>
+      <input
+        autofocus
+        class="pl-1"
+        placeholder="Article Search"
+        type="text"
+        [ngModelOptions]="{ standalone: true }"
+        [(ngModel)]="articleSearchTerm"
+        (ngModelChange)="updateSearchTerm(articleSearchTerm)"
+      />
+    </div>
+
+    <nav class="mt-2">
+      <ul class="pagination">
+        <li
+          class="page-item page-navigate-btn"
+          [ngClass]="{ disabled: !numberPages || currentPage <= 0 }"
+          (click)="previousPage(articleSearchTerm, currentPage)"
+        >
+          <span class="page-link">Previous</span>
+        </li>
+        <li class="page-item disabled">
+          <a class="page-link" *ngIf="numberPages"
+            >Page {{ currentPage + 1 }} of {{ numberPages + 1 }}</a
+          >
+        </li>
+        <li
+          class="page-item page-navigate-btn"
+          [ngClass]="{ disabled: !numberPages || currentPage >= numberPages }"
+          (click)="nextPage(articleSearchTerm, currentPage, numberPages)"
+        >
+          <span class="page-link">Next</span>
+        </li>
+      </ul>
+    </nav>
+  </form>
+</div>
+
+<div class="row">
+  <table class="table" *ngIf="numberPages || viewArticles">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Auther</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let article of viewArticles; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>
+          <a [href]="article.url" target="_blank">
+            {{ article.title }}
+          </a>
+        </td>
+        <td>{{ article.author }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
