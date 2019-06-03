@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataService, Article, SearchArticleResult, SearchArticleParam } from '../data.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/oper
   templateUrl: './article-search.component.html',
   styleUrls: ['./article-search.component.less']
 })
-export class ArticleSearchComponent implements OnInit {
+export class ArticleSearchComponent implements OnInit, OnDestroy {
 
   public articleSearchParam$ = new Subject<SearchArticleParam>();
   public articleSearchTerm: string;
@@ -34,7 +34,13 @@ export class ArticleSearchComponent implements OnInit {
         this.viewArticles = result.articles;
         this.currentPage = result.page;
         this.numberPages = result.nbPages;
-      });
+      },
+        (err) => console.log('error', err)
+      );
+  }
+
+  ngOnDestroy() {
+    this.articleSearchParam$.unsubscribe();
   }
 
   updateSearchTerm(searchTerm) {
